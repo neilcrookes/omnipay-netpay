@@ -5,7 +5,7 @@ namespace Omnipay\NetPay\Message;
 /**
  * NetPay Purchase Request
  */
-class ApiPurchaseRequest extends ApiAuthorizeRequest
+class ApiPurchaseTransactionRequest extends ApiAuthorizeTransactionRequest
 {
     protected $operationType = 'PURCHASE';
 }

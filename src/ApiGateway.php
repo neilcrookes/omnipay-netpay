@@ -89,26 +89,41 @@ class ApiGateway extends AbstractGateway
 
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiAuthorizeRequest', $parameters);
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiAuthorizeTransactionRequest', $parameters);
     }
 
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiPurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiPurchaseTransactionRequest', $parameters);
     }
 
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiCaptureRequest', $parameters);
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiCaptureTransactionRequest', $parameters);
     }
 
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiRefundRequest', $parameters);
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiRefundTransactionRequest', $parameters);
     }
 
     public function fetchTransaction(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiRetrieveRequest', $parameters);
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiRetrieveTransactionRequest', $parameters);
+    }
+
+    public function void(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiVoidTransactionRequest', $parameters);
+    }
+
+    public function createCard(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiCreateTokenRequest', $parameters);
+    }
+
+    public function deleteCard(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\NetPay\Message\ApiDeleteTokenRequest', $parameters);
     }
 }

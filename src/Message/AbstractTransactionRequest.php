@@ -12,17 +12,19 @@ abstract class AbstractTransactionRequest extends AbstractRequest
 
     /**
      * @return array
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     protected function getTransactionData()
     {
-        return [
+        $data = parent::getTransactionData();
+
+        $extra = [
             'transaction_id' => $this->getTransactionId(),
             'amount' => $this->getAmount(),
             'currency' => $this->getCurrency(),
-            'source' => $this->getTransactionSource(),
             'description' => $this->getDescription(),
         ];
+
+        return array_merge( $data, $extra );
     }
 
     /**
@@ -30,35 +32,11 @@ abstract class AbstractTransactionRequest extends AbstractRequest
      */
     protected function getPaymentSourceData()
     {
-        $paymentSourceData = [
-            'type' => 'CARD',
-            'card' => [
-                'card_type' => $this->formatCardType($this->getCard()->getBrand()),
-                'number' => $this->getCard()->getNumber(),
-                'expiry_month' => $this->getCard()->getExpiryDate("m"),
-                'expiry_year' => $this->getCard()->getExpiryDate("y"),
-                'security_code' => $this->getCard()->getCvv(),
-                'holder' => [
-                    'firstname' => $this->getCard()->getFirstName(),
-                    'lastname' => $this->getCard()->getLastName(),
-                    'fullname' => $this->getCard()->getFirstName() . ' ' . $this->getCard()->getLastName(),
-                ]
-            ]
-        ];
+        $paymentSourceData = parent::getPaymentSourceData();
 
-        $title = $this->getCard()->getTitle();
-        if ( ! empty( $title ) )
-        {
-            $paymentSourceData[ 'card' ][ 'holder' ][ 'title' ] = $title;
-            $paymentSourceData[ 'card' ][ 'holder' ][ 'fullname' ] = $title . ' ' . $paymentSourceData[ 'card' ][ 'holder' ][ 'fullname' ];
-        }
+        $paymentSourceData['card']['security_code'] = $this->getCard()->getCvv();
 
         return $paymentSourceData;
-    }
-
-    protected function formatCardType($brand)
-    {
-        return $this->cardTypes[ $brand ];
     }
 
     /**
