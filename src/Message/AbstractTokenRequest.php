@@ -13,7 +13,7 @@ abstract class AbstractTokenRequest extends AbstractRequest
     protected $testEndpoint = 'https://integrationtest.revolution.netpay.co.uk/v1/gateway/token';
     protected $liveEndpoint = 'https://integration.revolution.netpay.co.uk/v1/gateway/token';
 
-    protected $tokenMode = self::TOKEN_MODE_TEMPORARY;
+    protected $tokenMode = self::TOKEN_MODE_PERMANENT;
 
     protected function getTokenMode()
     {

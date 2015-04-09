@@ -15,20 +15,9 @@ class ApiCreateTokenRequest extends AbstractTokenRequest
             'merchant' => $this->getMerchantData(),
             'transaction' => $this->getTransactionData(),
             'payment_source' => $this->getPaymentSourceData(),
+            'token_mode' => $this->getTokenMode(),
         ];
 
         return $data;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getPaymentSourceData()
-    {
-        $paymentSourceData = parent::getPaymentSourceData();
-
-        $paymentSourceData['token_mode'] = $this->getTokenMode();
-
-        return $paymentSourceData;
     }
 }

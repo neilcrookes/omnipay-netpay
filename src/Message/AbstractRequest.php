@@ -2,6 +2,7 @@
 
 namespace Omnipay\NetPay\Message;
 
+use Guzzle\Http\Exception\BadResponseException;
 use Omnipay\Common\CreditCard;
 
 /**
@@ -201,7 +202,24 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         ];
         $request = $this->httpClient->put( $url, $headers, $body, $options );
         $request->setAuth( $this->getUsername(), $this->getPassword() );
-        $httpResponse = $request->send();
+        try
+        {
+            $httpResponse = $request->send();
+        }
+        catch ( BadResponseException $e )
+        {
+            // If we're in test mode and the bad response is because of an invalid request, provide some better debug info
+            if ( $this->getTestMode() && $e->getResponse()->getStatusCode() == 400 )
+            {
+                // Get the actual response body
+                $responseBody = json_decode( $e->getResponse()->getBody( true ) );
+                // Overwrite the reason phrase for the bad response in the response itself (by default it's "Bad Request" for 400 status code)
+                $e->getResponse()->setStatus( $e->getResponse()->getStatusCode(), $responseBody->error->explanation . "\n<pre>" . json_encode( $data, JSON_PRETTY_PRINT) . '</pre>');
+                // Rebuild the exception, since you can't set the message any other way other than through the constructor
+                $e = $e->factory( $e->getRequest(), $e->getResponse() );
+            }
+            throw $e;
+        }
         return $this->createResponse($httpResponse->getBody());
     }
 
