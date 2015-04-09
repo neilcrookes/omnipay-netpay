@@ -13,8 +13,7 @@ class ApiDeleteTokenRequest extends AbstractTokenRequest
      */
     public function getData()
     {
-        $this->validate('card');
-        $this->getCard()->validate();
+        $this->validate('cardReference');
 
         $data = [
             'merchant' => $this->getMerchantData(),
@@ -32,7 +31,7 @@ class ApiDeleteTokenRequest extends AbstractTokenRequest
     {
         $paymentSourceData = [
             'type' => $this->getPaymentSourceType(),
-            'token' => $this->getToken(),
+            'token' => $this->getCardReference(),
         ];
 
         return $paymentSourceData;

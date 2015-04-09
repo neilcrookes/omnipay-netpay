@@ -32,7 +32,14 @@ abstract class AbstractTransactionRequest extends AbstractRequest
      */
     protected function getPaymentSourceData()
     {
-        $paymentSourceData = parent::getPaymentSourceData();
+        if ( $this->getPaymentSourceType() == self::PAYMENT_SOURCE_TYPE_CARD )
+        {
+            $paymentSourceData = $this->getPaymentSourceCardData();
+        }
+        else // TOKEN
+        {
+            $paymentSourceData = $this->getPaymentSourceTokenData();
+        }
 
         $paymentSourceData['card']['security_code'] = $this->getCard()->getCvv();
 

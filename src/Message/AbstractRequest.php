@@ -10,8 +10,6 @@ use Omnipay\Common\CreditCard;
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
-    const API_VERSION = 'v1';
-
     const OPERATION_MODE_LIVE = 1;
     const OPERATION_MODE_TEST = 2;
 
@@ -53,6 +51,52 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setPassword($value)
     {
         return $this->setParameter('password', $value);
+    }
+
+    public function getMerchantId()
+    {
+        return $this->getParameter('merchantId');
+    }
+
+    public function setMerchantId($value)
+    {
+        return $this->setParameter('merchantId', $value);
+    }
+
+    public function getSslKeyPath()
+    {
+        return $this->getParameter('sslKeyPath');
+    }
+
+    public function setSslKeyPath($value)
+    {
+        return $this->setParameter('sslKeyPath', $value);
+    }
+
+    public function getSslCertificatePath()
+    {
+        return $this->getParameter('sslCertificatePath');
+    }
+
+    public function setSslCertificatePath($value)
+    {
+        return $this->setParameter('sslCertificatePath', $value);
+    }
+
+    public function getSslKeyPassword()
+    {
+        return $this->getParameter('sslKeyPassword');
+    }
+
+    public function setSslKeyPassword($value)
+    {
+        return $this->setParameter('sslKeyPassword', $value);
+    }
+
+    public function setCardReference( $value )
+    {
+        $this->setPaymentSourceType( self::PAYMENT_SOURCE_TYPE_TOKEN );
+        return parent::setCardReference( $value );
     }
 
     /**
@@ -97,46 +141,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $this->paymentSourceType = $paymentSourceType;
     }
 
-    public function getMerchantId()
-    {
-        return $this->getParameter('merchantId');
-    }
-
-    public function setMerchantId($value)
-    {
-        return $this->setParameter('merchantId', $value);
-    }
-
-    public function getSslKeyPath()
-    {
-        return $this->getParameter('sslKeyPath');
-    }
-
-    public function setSslKeyPath($value)
-    {
-        return $this->setParameter('sslKeyPath', $value);
-    }
-
-    public function getSslCertificatePath()
-    {
-        return $this->getParameter('sslCertificatePath');
-    }
-
-    public function setSslCertificatePath($value)
-    {
-        return $this->setParameter('sslCertificatePath', $value);
-    }
-
-    public function getSslKeyPassword()
-    {
-        return $this->getParameter('sslKeyPassword');
-    }
-
-    public function setSslKeyPassword($value)
-    {
-        return $this->setParameter('sslKeyPassword', $value);
-    }
-
     protected function getMerchantData()
     {
         return [
@@ -156,10 +160,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * @return array
      */
-    protected function getPaymentSourceData()
+    protected function getPaymentSourceCardData()
     {
         $paymentSourceData = [
-            'type' => 'CARD',
+            'type' => self::PAYMENT_SOURCE_TYPE_CARD,
             'card' => [
                 'card_type' => $this->formatCardType($this->getCard()->getBrand()),
                 'number' => $this->getCard()->getNumber(),
@@ -186,6 +190,19 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     protected function formatCardType($brand)
     {
         return $this->cardTypes[ $brand ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPaymentSourceTokenData()
+    {
+        $paymentSourceData = [
+            'type' => self::PAYMENT_SOURCE_TYPE_TOKEN,
+            'token' => $this->getCardReference(),
+        ];
+
+        return $paymentSourceData;
     }
 
     public function sendData($data)

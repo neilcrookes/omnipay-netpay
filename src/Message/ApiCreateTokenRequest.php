@@ -14,7 +14,7 @@ class ApiCreateTokenRequest extends AbstractTokenRequest
         $data = [
             'merchant' => $this->getMerchantData(),
             'transaction' => $this->getTransactionData(),
-            'payment_source' => $this->getPaymentSourceData(),
+            'payment_source' => $this->getPaymentSourceCardData(),
             'token_mode' => $this->getTokenMode(),
         ];
 

@@ -8,17 +8,31 @@ class ApiAuthorizeTransactionRequest extends AbstractTransactionRequest
     
     public function getData()
     {
-        $this->validate('amount', 'card', 'currency', 'transactionId', 'description');
+        $this->validate('amount', 'currency', 'transactionId', 'description');
 
-        $this->getCard()->validate();
+        if ( $this->getPaymentSourceType() == self::PAYMENT_SOURCE_TYPE_CARD )
+        {
+            $this->validate( 'card' );
+            $this->getCard()->validate();
 
-        $data = [
-            'merchant' => $this->getMerchantData(),
-            'transaction' => $this->getTransactionData(),
-            'payment_source' => $this->getPaymentSourceData(),
-            'billing' => $this->getBillingData(),
-            'customer' => $this->getCustomerData(),
-        ];
+            $data = [
+                'merchant' => $this->getMerchantData(),
+                'transaction' => $this->getTransactionData(),
+                'payment_source' => $this->getPaymentSourceData(),
+                'billing' => $this->getBillingData(),
+                'customer' => $this->getCustomerData(),
+            ];
+        }
+        else // TOKEN
+        {
+            $this->validate( 'cardReference' );
+
+            $data = [
+                'merchant' => $this->getMerchantData(),
+                'transaction' => $this->getTransactionData(),
+                'payment_source' => $this->getPaymentSourceData(),
+            ];
+        }
 
         return $data;
     }

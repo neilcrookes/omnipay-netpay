@@ -15,6 +15,19 @@ abstract class AbstractTokenRequest extends AbstractRequest
 
     protected $tokenMode = self::TOKEN_MODE_PERMANENT;
 
+    /**
+     * @param string $tokenMode
+     * @throws \Exception
+     */
+    public function setTokenMode($tokenMode)
+    {
+        if ( ! in_array( $tokenMode, [ self::TOKEN_MODE_PERMANENT, self::TOKEN_MODE_TEMPORARY ] ) )
+        {
+            throw new \Exception('Invalid token mode supplied, must be one of " ' . implode('","', [ self::TOKEN_MODE_PERMANENT, self::TOKEN_MODE_TEMPORARY ] ) . '"');
+        }
+        $this->tokenMode = $tokenMode;
+    }
+
     protected function getTokenMode()
     {
         return $this->tokenMode;

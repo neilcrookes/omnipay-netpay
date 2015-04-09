@@ -11,7 +11,7 @@ class ApiRefundTransactionRequest extends AbstractTransactionRequest
 
     public function getData()
     {
-        $this->validate('transactionReference', 'amount', 'currency', 'transactionId', 'description');
+        $this->validate('amount', 'currency', 'transactionId', 'description', 'transactionReference');
 
         $data = [
             'merchant' => $this->getMerchantData(),
