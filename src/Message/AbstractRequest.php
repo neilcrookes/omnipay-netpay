@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\NetPay\Message;
+namespace Kong\NetPay\Message;
 
 use Guzzle\Http\Exception\BadResponseException;
 use Omnipay\Common\CreditCard;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\NetPay\Message;
+namespace Kong\NetPay\Message;
 
 class ApiDeleteTokenRequest extends AbstractTokenRequest
 {

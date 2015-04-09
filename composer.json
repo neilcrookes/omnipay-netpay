@@ -1,5 +1,5 @@
 {
-    "name": "omnipay/netpay",
+    "name": "kong/omnipay-netpay",
     "type": "library",
     "description": "NetPay gateway for Omnipay payment processing library",
     "keywords": [
@@ -11,7 +11,7 @@
         "netpay",
         "purchase"
     ],
-    "homepage": "https://github.com/Kong365/omnipay-netpay",
+    "homepage": "https://github.com/kong/omnipay-netpay",
     "license": "MIT",
     "authors": [
         {
@@ -20,7 +20,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Omnipay\\NetPay\\" : "src/" }
+        "psr-4": { "Kong\\NetPay\\" : "src/" }
     },
     "require": {
         "omnipay/common": "~2.0"

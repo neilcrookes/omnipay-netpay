@@ -1,4 +1,4 @@
-<?php namespace Omnipay\NetPay\Message;
+<?php namespace Kong\NetPay\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;

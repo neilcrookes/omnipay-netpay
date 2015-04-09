@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\NetPay;
+namespace Kong\NetPay;
 
 use Omnipay\Common\AbstractGateway;
 
@@ -89,41 +89,41 @@ class ApiGateway extends AbstractGateway
 
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiAuthorizeTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiAuthorizeTransactionRequest', $parameters);
     }
 
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiPurchaseTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiPurchaseTransactionRequest', $parameters);
     }
 
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiCaptureTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiCaptureTransactionRequest', $parameters);
     }
 
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiRefundTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiRefundTransactionRequest', $parameters);
     }
 
     public function fetchTransaction(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiRetrieveTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiRetrieveTransactionRequest', $parameters);
     }
 
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiVoidTransactionRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiVoidTransactionRequest', $parameters);
     }
 
     public function createCard(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiCreateTokenRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiCreateTokenRequest', $parameters);
     }
 
     public function deleteCard(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NetPay\Message\ApiDeleteTokenRequest', $parameters);
+        return $this->createRequest('\Kong\NetPay\Message\ApiDeleteTokenRequest', $parameters);
     }
 }
