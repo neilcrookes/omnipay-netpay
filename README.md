@@ -31,10 +31,20 @@ And run composer to update your dependencies:
 
 The following gateways are provided by this package:
 
-* Api (NetPay API)
+* Api (\Kong\NetPay\ApiGateway)
 
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
 repository.
+
+## Gateway Methods
+
+* authorize($options) - authorize an amount on the customer's card
+* capture($options) - capture an amount you have previously authorized
+* purchase($options) - authorize and immediately capture an amount on the customer's card
+* refund($options) - refund an already processed transaction
+* void($options) - not working yet
+* createCard($options) - returns a response object which includes a cardReference, which can be used for future transactions
+* deleteCard($options) - remove a stored card
 
 ## Support
 
