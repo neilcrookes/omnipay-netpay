@@ -13,7 +13,15 @@ abstract class AbstractTokenRequest extends AbstractRequest
     protected $testEndpoint = 'https://integrationtest.revolution.netpay.co.uk/v1/gateway/token';
     protected $liveEndpoint = 'https://integration.revolution.netpay.co.uk/v1/gateway/token';
 
-    protected $tokenMode = self::TOKEN_MODE_PERMANENT;
+    protected function getTokenMode()
+    {
+        $tokenMode = $this->getParameter('tokenMode');
+        if ( is_null( $tokenMode ) )
+        {
+            return self::TOKEN_MODE_PERMANENT;
+        }
+        return $tokenMode;
+    }
 
     /**
      * @param string $tokenMode
@@ -25,11 +33,6 @@ abstract class AbstractTokenRequest extends AbstractRequest
         {
             throw new \Exception('Invalid token mode supplied, must be one of " ' . implode('","', [ self::TOKEN_MODE_PERMANENT, self::TOKEN_MODE_TEMPORARY ] ) . '"');
         }
-        $this->tokenMode = $tokenMode;
-    }
-
-    protected function getTokenMode()
-    {
-        return $this->tokenMode;
+        $this->setParameter('tokenMode', $tokenMode);
     }
 }

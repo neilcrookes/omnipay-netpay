@@ -41,7 +41,10 @@ abstract class AbstractTransactionRequest extends AbstractRequest
             $paymentSourceData = $this->getPaymentSourceTokenData();
         }
 
-        $paymentSourceData['card']['security_code'] = $this->getCard()->getCvv();
+        if ( $this->getTransactionSource() == self::TRANSACTION_SOURCE_INTERNET )
+        {
+            $paymentSourceData['card']['security_code'] = $this->getCard()->getCvv();
+        }
 
         return $paymentSourceData;
     }
@@ -73,6 +76,8 @@ abstract class AbstractTransactionRequest extends AbstractRequest
         }
 
         $billingData[ 'bill_to_country' ] = $this->getCard()->getCountry();
+
+        $billingData = array_filter( $billingData );
 
         return $billingData;
     }

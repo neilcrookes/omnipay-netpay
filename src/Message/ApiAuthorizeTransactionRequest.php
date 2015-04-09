@@ -19,9 +19,15 @@ class ApiAuthorizeTransactionRequest extends AbstractTransactionRequest
                 'merchant' => $this->getMerchantData(),
                 'transaction' => $this->getTransactionData(),
                 'payment_source' => $this->getPaymentSourceData(),
-                'billing' => $this->getBillingData(),
                 'customer' => $this->getCustomerData(),
             ];
+
+            $billingData = $this->getBillingData();
+
+            if ( ! empty( $billingData ) )
+            {
+                $data[ 'billing' ] = $billingData;
+            }
         }
         else // TOKEN
         {

@@ -27,12 +27,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         CreditCard::BRAND_DINERS_CLUB => 'DINE',
     ];
 
-    protected $operationType;
-
-    protected $transactionSource = self::TRANSACTION_SOURCE_INTERNET;
-
-    protected $paymentSourceType = self::PAYMENT_SOURCE_TYPE_CARD;
-
     public function getUsername()
     {
         return $this->getParameter('username');
@@ -107,20 +101,25 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function getTransactionSource()
     {
-        return $this->transactionSource;
+        $transactionSource = $this->getParameter('transactionSource');
+        if ( is_null( $transactionSource ) )
+        {
+            $transactionSource = self::TRANSACTION_SOURCE_INTERNET;
+        }
+        return $transactionSource;
     }
 
     /**
      * @param string $transactionSource
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function setTransactionSource($transactionSource)
     {
         if ( ! in_array( $transactionSource, [ self::TRANSACTION_SOURCE_INTERNET, self::TRANSACTION_SOURCE_MOTO ] ) )
         {
-            throw new \Exception('Invalid transaction source supplied, must be one of " ' . implode('","', [ self::TRANSACTION_SOURCE_INTERNET, self::TRANSACTION_SOURCE_MOTO ] ) . '"');
+            throw new \InvalidArgumentException('Invalid transaction source supplied, must be one of " ' . implode('","', [ self::TRANSACTION_SOURCE_INTERNET, self::TRANSACTION_SOURCE_MOTO ] ) . '"');
         }
-        $this->transactionSource = $transactionSource;
+        $this->setParameter('transactionSource', $transactionSource);
     }
 
     /**
@@ -128,22 +127,30 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function getPaymentSourceType()
     {
-        return $this->paymentSourceType;
+        $paymentSourceType = $this->getParameter('paymentSourceType');
+        if ( is_null( $paymentSourceType ) )
+        {
+            $paymentSourceType = self::PAYMENT_SOURCE_TYPE_CARD;
+        }
+        return $paymentSourceType;
     }
 
     /**
      * @param string $paymentSourceType
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function setPaymentSourceType($paymentSourceType)
     {
         if ( ! in_array( $paymentSourceType, [ self::PAYMENT_SOURCE_TYPE_CARD, self::PAYMENT_SOURCE_TYPE_TOKEN ] ) )
         {
-            throw new \Exception('Invalid payment source type supplied, must be one of " ' . implode('","', [ self::PAYMENT_SOURCE_TYPE_CARD, self::PAYMENT_SOURCE_TYPE_TOKEN ] ) . '"');
+            throw new \InvalidArgumentException('Invalid payment source type supplied, must be one of " ' . implode('","', [ self::PAYMENT_SOURCE_TYPE_CARD, self::PAYMENT_SOURCE_TYPE_TOKEN ] ) . '"');
         }
-        $this->paymentSourceType = $paymentSourceType;
+        $this->setParameter('paymentSourceType', $paymentSourceType);
     }
 
+    /**
+     * @return array
+     */
     protected function getMerchantData()
     {
         return [
@@ -153,6 +160,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function getTransactionData()
     {
         return [
@@ -190,6 +200,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $paymentSourceData;
     }
 
+    /**
+     * @param string $brand
+     * @return string
+     */
     protected function formatCardType($brand)
     {
         return $this->cardTypes[ $brand ];
@@ -208,6 +222,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $paymentSourceData;
     }
 
+    /**
+     * @param array $data
+     * @return Response
+     * @throws BadResponseException
+     */
     public function sendData($data)
     {
         $url = $this->getEndpoint();
@@ -243,16 +262,25 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->createResponse($httpResponse->getBody());
     }
 
+    /**
+     * @return string
+     */
     protected function getEndpoint()
     {
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
     }
 
+    /**
+     * @return string
+     */
     protected function getOperationType()
     {
         return $this->operationType;
     }
 
+    /**
+     * @return string
+     */
     protected function getOperationMode()
     {
         return $this->getTestMode() ? self::OPERATION_MODE_TEST : self::OPERATION_MODE_LIVE;
