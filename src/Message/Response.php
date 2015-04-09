@@ -25,6 +25,10 @@ class Response extends AbstractResponse
         {
             return $this->data->order->order_id;
         }
+    }
+
+    public function getCardReference()
+    {
         if ( isset( $this->data->token ) )
         {
             return $this->data->token;
