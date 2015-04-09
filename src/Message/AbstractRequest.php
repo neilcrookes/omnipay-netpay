@@ -95,7 +95,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public function setCardReference( $value )
     {
-        $this->setPaymentSourceType( self::PAYMENT_SOURCE_TYPE_TOKEN );
+        if ( ! empty( $value ) )
+        {
+            $this->setPaymentSourceType( self::PAYMENT_SOURCE_TYPE_TOKEN );
+        }
         return parent::setCardReference( $value );
     }
 
