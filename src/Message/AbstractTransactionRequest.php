@@ -87,16 +87,28 @@ abstract class AbstractTransactionRequest extends AbstractRequest
      */
     protected function getCustomerData()
     {
+        $ip = $this->getClientIp();
+        // Sometimes more than 1 IP address is returned, so just use the first, otherwise gethostbyaddr() throws an
+        // error despite what the PHP manual says.
+        if ( strstr( $ip, ',') )
+        {
+            $ips = explode( ',', $ip );
+            $host = gethostbyaddr( trim( $ips[ 0 ] ) );
+        }
+        else
+        {
+            $host = gethostbyaddr( $ip );
+        }
         $customerData = [
-            'customer_ip_address' => $this->getClientIp(),
+            'customer_ip_address' => $ip,
             'customer_email' => $this->getCard()->getEmail(),
             'customer_phone' => $this->getCard()->getPhone(),
             'customer_fax' => $this->getCard()->getFax(),
-            'customer_hostname' => substr( gethostbyaddr( $this->getClientIp() ), 0, 60 ),
+            'customer_hostname' => substr( $host, 0, 60 ),
             // This doesn't seem to work
-//            'customer_browser' => substr(@$_SERVER['HTTP_USER_AGENT'], 0, 60),
+//            'customer_browser' => substr($_SERVER['HTTP_USER_AGENT'], 0, 60),
         ];
 
-        return array_filter($customerData);
+        return array_filter( $customerData );
     }
 }

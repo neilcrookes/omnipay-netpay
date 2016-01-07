@@ -235,10 +235,20 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'Content-Type' =>  'application/json'
         ];
         $body = json_encode( $data );
-        $options = [
-            'cert' => $this->getSslCertificatePath(),
-            'ssl_key' => [ $this->getSslKeyPath(), $this->getSslKeyPassword() ],
-        ];
+        $cert = $this->getSslCertificatePath();
+        $sslKeyPath = $this->getSslKeyPath();
+        $sslKeyPassword = $this->getSslKeyPassword();
+        if ( $cert && $sslKeyPath && $sslKeyPassword )
+        {
+            $options = [
+                'cert' => $cert,
+                'ssl_key' => [ $sslKeyPath, $sslKeyPassword ],
+            ];
+        }
+        else
+        {
+            $options = [];
+        }
         $request = $this->httpClient->put( $url, $headers, $body, $options );
         $request->setAuth( $this->getUsername(), $this->getPassword() );
         try
@@ -247,15 +257,24 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         }
         catch ( BadResponseException $e )
         {
+            $response = $e->getResponse();
             // If we're in test mode and the bad response is because of an invalid request, provide some better debug info
-            if ( $this->getTestMode() && $e->getResponse()->getStatusCode() == 400 )
+            if ( $this->getTestMode() && $response->getStatusCode() == 400 )
             {
                 // Get the actual response body
-                $responseBody = json_decode( $e->getResponse()->getBody( true ) );
-                // Overwrite the reason phrase for the bad response in the response itself (by default it's "Bad Request" for 400 status code)
-                $e->getResponse()->setStatus( $e->getResponse()->getStatusCode(), $responseBody->error->explanation . "\n<pre>" . json_encode( $data, JSON_PRETTY_PRINT) . '</pre>');
+                $responseBodyAsString = $response->getBody( true );
+                $responseBody = json_decode( $responseBodyAsString );
+                if ( $responseBody !== null )
+                {
+                    // Overwrite the reason phrase for the bad response in the response itself (by default it's "Bad Request" for 400 status code)
+                    $response->setStatus( 400, $responseBody->error->explanation . "\n<pre>" . json_encode( $data, JSON_PRETTY_PRINT) . '</pre>');
+                }
+                else
+                {
+                    $response->setStatus( 400, $responseBodyAsString);
+                }
                 // Rebuild the exception, since you can't set the message any other way other than through the constructor
-                $e = $e->factory( $e->getRequest(), $e->getResponse() );
+                $e = $e->factory( $e->getRequest(), $response );
             }
             throw $e;
         }
