@@ -95,6 +95,10 @@ abstract class AbstractTransactionRequest extends AbstractRequest
             $ips = explode( ',', $ip );
             $host = gethostbyaddr( trim( $ips[ 0 ] ) );
         }
+        elseif ( ! filter_var( $ip, FILTER_VALIDATE_IP) )
+        {
+            $host = $ip;
+        }
         else
         {
             $host = gethostbyaddr( $ip );
