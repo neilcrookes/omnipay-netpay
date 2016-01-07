@@ -1,6 +1,6 @@
 {
     "name": "kong/omnipay-netpay",
-    "type": "library",
+    "type": "vcs",
     "description": "NetPay gateway for Omnipay payment processing library",
     "keywords": [
         "gateway",
