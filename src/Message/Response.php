@@ -37,13 +37,17 @@ class Response extends AbstractResponse
 
     public function getMessage()
     {
-        if ( isset( $this->data->response ) &&  isset( $this->data->response->acquirer_message ))
+        if ( isset( $this->data->response ) && isset( $this->data->response->acquirer_message ) )
         {
             return $this->data->response->acquirer_message;
         }
-        if ( isset( $this->data->error ) &&  isset( $this->data->error->explanation ) )
+        if ( isset( $this->data->error ) && isset( $this->data->error->explanation ) )
         {
             return $this->data->error->explanation;
+        }
+        if ( isset( $this->data->response ) && isset( $this->data->response->gateway_code ) )
+        {
+            return $this->data->response->gateway_code;
         }
     }
 }
